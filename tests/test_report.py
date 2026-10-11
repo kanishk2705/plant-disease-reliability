@@ -29,3 +29,13 @@ def test_bootstrap_interval_contains_point_and_gap_and_pair_run():
     assert r["accuracy"]["lo"] <= r["accuracy"]["point"] <= r["accuracy"]["hi"]
     g = report.gaps(lg, y, cl, lg2, y2, cl2, 1.0, 4, 50, 0); assert "macro_f1" in g
     pr = report.paired_models(lg, 1.0, lg2, 1.0, y, cl, 4, 50, 0); assert abs(pr["accuracy"]["point"]) <= 1
+
+
+def test_plot_data_and_bundle_are_json_serialisable():
+    import json
+    lg, y, _ = _data()
+    c = E.calibrate(lg, y)
+    out = {"b": E.bundle(lg, y, c["T"], list(range(4)), {"r_cov": c["tau_r_cov"], "r_risk": c["tau_r_risk"]}),
+           "p": report.plot_data(lg, y, c["T"], 4), "x": np.float32(1.5), "n": np.int64(3), "nan": float("nan")}
+    s = json.dumps(out, default=report.to_jsonable)
+    assert json.loads(s)["n"] == 3

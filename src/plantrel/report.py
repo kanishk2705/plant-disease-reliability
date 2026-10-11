@@ -81,3 +81,13 @@ def paired_models(logits_a, T_a, logits_b, T_b, y, clusters, n_classes, n_boot, 
     for name in ("accuracy", "macro_f1", "ece15_width", "brier_sum", "nll", "aurc"):
         out[name] = ci(paired_bootstrap({"p": pa, "y": y}, {"p": pb, "y": y}, clusters, st[name], n_boot=n_boot, seed=seed))
     return out
+
+
+def to_jsonable(o):
+    """json.dumps default hook: numpy scalars/arrays to plain Python (NaN/inf become None)."""
+    if isinstance(o, np.ndarray):
+        return o.tolist()
+    if isinstance(o, np.generic):
+        o = o.item()
+        return None if isinstance(o, float) and not np.isfinite(o) else o
+    raise TypeError(f"not JSON serialisable: {type(o).__name__}")

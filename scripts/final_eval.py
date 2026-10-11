@@ -60,7 +60,7 @@ def main():
         out["external"] = {"point": bundle(lg, ey, T, classes, taus), "ci": report.bootstrap_set(lg, ey, ecl, T, K, taus["r_cov"], a.n_boot, 2),
                            "plots": report.plot_data(lg, ey, T, K)}
         out["gaps_source_minus_external"] = report.gaps(z["test_logits"], z["test_labels"], test_cl, lg, ey, ecl, T, K, a.n_boot, 3)
-    (rd / ("source_report.json" if a.source_only else "final_report.json")).write_text(json.dumps(out))
+    (rd / ("source_report.json" if a.source_only else "final_report.json")).write_text(json.dumps(out, default=report.to_jsonable))
     s = out["source_test"]["point"]["cal"]
     print(json.dumps({"run": a.run_id, "source_acc": round(s["accuracy"], 4), "source_f1": round(s["macro_f1"], 4),
                       **({"ext_acc": round(out["external"]["point"]["cal"]["accuracy"], 4),
