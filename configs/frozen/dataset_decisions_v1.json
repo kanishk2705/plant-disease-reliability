@@ -1,0 +1,314 @@
+{
+  "class_alignment": [
+    {
+      "canonical": "Apple___Apple_scab",
+      "external_images": 92,
+      "plantdoc_label": "Apple Scab Leaf",
+      "plantvillage_images": 630
+    },
+    {
+      "canonical": "Apple___healthy",
+      "external_images": 89,
+      "plantdoc_label": "Apple leaf",
+      "plantvillage_images": 1645
+    },
+    {
+      "canonical": "Pepper,_bell___healthy",
+      "external_images": 61,
+      "plantdoc_label": "Bell_pepper leaf",
+      "plantvillage_images": 1478
+    },
+    {
+      "canonical": "Blueberry___healthy",
+      "external_images": 116,
+      "plantdoc_label": "Blueberry leaf",
+      "plantvillage_images": 1502
+    },
+    {
+      "canonical": "Cherry_(including_sour)___healthy",
+      "external_images": 56,
+      "plantdoc_label": "Cherry leaf",
+      "plantvillage_images": 854
+    },
+    {
+      "canonical": "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot",
+      "external_images": 63,
+      "plantdoc_label": "Corn Gray leaf spot",
+      "plantvillage_images": 513
+    },
+    {
+      "canonical": "Peach___healthy",
+      "external_images": 110,
+      "plantdoc_label": "Peach leaf",
+      "plantvillage_images": 360
+    },
+    {
+      "canonical": "Potato___Early_blight",
+      "external_images": 97,
+      "plantdoc_label": "Potato leaf early blight",
+      "plantvillage_images": 1000
+    },
+    {
+      "canonical": "Potato___Late_blight",
+      "external_images": 91,
+      "plantdoc_label": "Potato leaf late blight",
+      "plantvillage_images": 1000
+    },
+    {
+      "canonical": "Raspberry___healthy",
+      "external_images": 118,
+      "plantdoc_label": "Raspberry leaf",
+      "plantvillage_images": 371
+    },
+    {
+      "canonical": "Soybean___healthy",
+      "external_images": 64,
+      "plantdoc_label": "Soyabean leaf",
+      "plantvillage_images": 5090
+    },
+    {
+      "canonical": "Squash___Powdery_mildew",
+      "external_images": 128,
+      "plantdoc_label": "Squash Powdery mildew leaf",
+      "plantvillage_images": 1835
+    },
+    {
+      "canonical": "Strawberry___healthy",
+      "external_images": 96,
+      "plantdoc_label": "Strawberry leaf",
+      "plantvillage_images": 456
+    },
+    {
+      "canonical": "Tomato___Early_blight",
+      "external_images": 68,
+      "plantdoc_label": "Tomato Early blight leaf",
+      "plantvillage_images": 1000
+    },
+    {
+      "canonical": "Tomato___Septoria_leaf_spot",
+      "external_images": 136,
+      "plantdoc_label": "Tomato Septoria leaf spot",
+      "plantvillage_images": 1771
+    },
+    {
+      "canonical": "Tomato___Bacterial_spot",
+      "external_images": 104,
+      "plantdoc_label": "Tomato leaf bacterial spot",
+      "plantvillage_images": 2127
+    },
+    {
+      "canonical": "Tomato___Late_blight",
+      "external_images": 99,
+      "plantdoc_label": "Tomato leaf late blight",
+      "plantvillage_images": 1909
+    },
+    {
+      "canonical": "Tomato___Tomato_mosaic_virus",
+      "external_images": 53,
+      "plantdoc_label": "Tomato leaf mosaic virus",
+      "plantvillage_images": 373
+    },
+    {
+      "canonical": "Tomato___Tomato_Yellow_Leaf_Curl_Virus",
+      "external_images": 72,
+      "plantdoc_label": "Tomato leaf yellow virus",
+      "plantvillage_images": 5357
+    },
+    {
+      "canonical": "Tomato___healthy",
+      "external_images": 60,
+      "plantdoc_label": "Tomato leaf",
+      "plantvillage_images": 1591
+    },
+    {
+      "canonical": "Tomato___Leaf_Mold",
+      "external_images": 90,
+      "plantdoc_label": "Tomato mold leaf",
+      "plantvillage_images": 952
+    },
+    {
+      "canonical": "Grape___Black_rot",
+      "external_images": 63,
+      "plantdoc_label": "grape leaf black rot",
+      "plantvillage_images": 1180
+    },
+    {
+      "canonical": "Grape___healthy",
+      "external_images": 67,
+      "plantdoc_label": "grape leaf",
+      "plantvillage_images": 423
+    }
+  ],
+  "class_list": [
+    "Apple___Apple_scab",
+    "Apple___healthy",
+    "Blueberry___healthy",
+    "Cherry_(including_sour)___healthy",
+    "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot",
+    "Grape___Black_rot",
+    "Grape___healthy",
+    "Peach___healthy",
+    "Pepper,_bell___healthy",
+    "Potato___Early_blight",
+    "Potato___Late_blight",
+    "Raspberry___healthy",
+    "Soybean___healthy",
+    "Squash___Powdery_mildew",
+    "Strawberry___healthy",
+    "Tomato___Bacterial_spot",
+    "Tomato___Early_blight",
+    "Tomato___Late_blight",
+    "Tomato___Leaf_Mold",
+    "Tomato___Septoria_leaf_spot",
+    "Tomato___Tomato_Yellow_Leaf_Curl_Virus",
+    "Tomato___Tomato_mosaic_virus",
+    "Tomato___healthy"
+  ],
+  "crop_policy": {
+    "stored_size": 224,
+    "transform": {
+      "crop": null,
+      "normalisation": "ImageNet mean/std",
+      "resize": [
+        224,
+        224
+      ]
+    },
+    "unit": "whole image of the PlantDoc cropped release, one per cluster"
+  },
+  "dedup_settings": {
+    "cross_dataset_rule": "remove exact matches; review perceptual distance <= 6 by eye",
+    "external_cluster_rule": "connected components of exact SHA-256 equality and perceptual-hash (DCT 64-bit) distance <= 6 inside PlantDoc",
+    "plantvillage_group_merge": "same class and perceptual-hash distance <= 2",
+    "split_seed": 42
+  },
+  "distributions": {
+    "external_n": 1993,
+    "external_per_class": {
+      "Apple___Apple_scab": 92,
+      "Apple___healthy": 89,
+      "Blueberry___healthy": 116,
+      "Cherry_(including_sour)___healthy": 56,
+      "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot": 63,
+      "Grape___Black_rot": 63,
+      "Grape___healthy": 67,
+      "Peach___healthy": 110,
+      "Pepper,_bell___healthy": 61,
+      "Potato___Early_blight": 97,
+      "Potato___Late_blight": 91,
+      "Raspberry___healthy": 118,
+      "Soybean___healthy": 64,
+      "Squash___Powdery_mildew": 128,
+      "Strawberry___healthy": 96,
+      "Tomato___Bacterial_spot": 104,
+      "Tomato___Early_blight": 68,
+      "Tomato___Late_blight": 99,
+      "Tomato___Leaf_Mold": 90,
+      "Tomato___Septoria_leaf_spot": 136,
+      "Tomato___Tomato_Yellow_Leaf_Curl_Virus": 72,
+      "Tomato___Tomato_mosaic_virus": 53,
+      "Tomato___healthy": 60
+    },
+    "source_counts": {
+      "test": 5028,
+      "train": 23327,
+      "val_cal": 2530,
+      "val_sel": 2532
+    },
+    "source_groups": {
+      "test": 1909,
+      "train": 8904,
+      "val_cal": 952,
+      "val_sel": 951
+    }
+  },
+  "eval_class_lists": {
+    "external": [
+      "Apple___Apple_scab",
+      "Apple___healthy",
+      "Blueberry___healthy",
+      "Cherry_(including_sour)___healthy",
+      "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot",
+      "Grape___Black_rot",
+      "Grape___healthy",
+      "Peach___healthy",
+      "Pepper,_bell___healthy",
+      "Potato___Early_blight",
+      "Potato___Late_blight",
+      "Raspberry___healthy",
+      "Soybean___healthy",
+      "Squash___Powdery_mildew",
+      "Strawberry___healthy",
+      "Tomato___Bacterial_spot",
+      "Tomato___Early_blight",
+      "Tomato___Late_blight",
+      "Tomato___Leaf_Mold",
+      "Tomato___Septoria_leaf_spot",
+      "Tomato___Tomato_Yellow_Leaf_Curl_Virus",
+      "Tomato___Tomato_mosaic_virus",
+      "Tomato___healthy"
+    ],
+    "source_test": [
+      "Apple___Apple_scab",
+      "Apple___healthy",
+      "Blueberry___healthy",
+      "Cherry_(including_sour)___healthy",
+      "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot",
+      "Grape___Black_rot",
+      "Grape___healthy",
+      "Peach___healthy",
+      "Pepper,_bell___healthy",
+      "Potato___Early_blight",
+      "Potato___Late_blight",
+      "Raspberry___healthy",
+      "Soybean___healthy",
+      "Squash___Powdery_mildew",
+      "Strawberry___healthy",
+      "Tomato___Bacterial_spot",
+      "Tomato___Early_blight",
+      "Tomato___Late_blight",
+      "Tomato___Leaf_Mold",
+      "Tomato___Septoria_leaf_spot",
+      "Tomato___Tomato_Yellow_Leaf_Curl_Virus",
+      "Tomato___Tomato_mosaic_virus",
+      "Tomato___healthy"
+    ]
+  },
+  "evaluation_transform": {
+    "crop": null,
+    "normalisation": "ImageNet mean/std",
+    "resize": [
+      224,
+      224
+    ]
+  },
+  "external_manifest_sha256": "afa84f160393ef3941fb344da20865c18015e9f39a83481b662d0693d9d93ef9",
+  "leakage_checks": {
+    "exact_dup_hash_across_splits": 0,
+    "ext_clusters_dup": 0,
+    "groups_in_multiple_splits": 0,
+    "pv_sha_in_external": 0
+  },
+  "licence_findings": {
+    "plantdoc": {
+      "licence": "CC BY 4.0 (repository LICENSE.txt)",
+      "repo": "https://github.com/pratikkayal/PlantDoc-Dataset",
+      "revision": "5467f6012d78d1c446145d5f582da6096f852ae8"
+    },
+    "plantvillage": {
+      "licence": "UNRESOLVED",
+      "repo": "https://github.com/spMohanty/PlantVillage-Dataset",
+      "revision": "7f7ecc7e1eaca78107e3affe7cb5abd9427e139a",
+      "variant": "raw/color"
+    }
+  },
+  "min_counts": {
+    "external_images": 15,
+    "plantvillage_groups": 20,
+    "plantvillage_images": 200
+  },
+  "protocol_version": "1.0",
+  "schema_version": 1,
+  "split_manifest_sha256": "5174f349a47498fa5b1e094b41c707c92d8e5f1e497fb7eeafe7e8cb5c21bc9a",
+  "status": "PROVISIONAL: PlantVillage licence unresolved; class-alignment pathology evidence not source-verified by the user."
+}

@@ -45,7 +45,7 @@ def main():
     ek["canonical"] = ek["class"].map(prim); ek["label"] = ek["canonical"].map({c: i for i, c in enumerate(classes)})
     outd = ROOT/"outputs/splits"; outd.mkdir(parents=True, exist_ok=True)
     pvk[["class","file","gid","sha256","split","label"]].to_csv(outd/"source_manifest.csv", index=False)
-    ek[["canonical","class","file","cluster","sha256","label","w","h","phash","pv_nearest_dist"]].to_csv(outd/"external_manifest.csv", index=False)
+    ek[["canonical","class","split","file","cluster","sha256","label","w","h","phash","pv_nearest_dist"]].to_csv(outd/"external_manifest.csv", index=False)
     rep = {"seed": SEED, "K": len(classes), "classes": classes}
     g2s = pvk.groupby("gid")["split"].nunique(); rep["groups_in_multiple_splits"] = int((g2s > 1).sum())
     h = pvk.groupby("sha256")["split"].nunique(); rep["exact_dup_hash_across_splits"] = int((h > 1).sum())
