@@ -1,0 +1,113 @@
+{
+  "T": 0.7097258115251714,
+  "checkpoint_sha256": "97e6c135c0c566e53a416bc2ff3c4a9dbc0fc19d9c948a21d95c4a3acd9e4e17",
+  "class_list": [
+    "Apple___Apple_scab",
+    "Apple___healthy",
+    "Blueberry___healthy",
+    "Cherry_(including_sour)___healthy",
+    "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot",
+    "Grape___Black_rot",
+    "Grape___healthy",
+    "Peach___healthy",
+    "Pepper,_bell___healthy",
+    "Potato___Early_blight",
+    "Potato___Late_blight",
+    "Raspberry___healthy",
+    "Soybean___healthy",
+    "Squash___Powdery_mildew",
+    "Strawberry___healthy",
+    "Tomato___Bacterial_spot",
+    "Tomato___Early_blight",
+    "Tomato___Late_blight",
+    "Tomato___Leaf_Mold",
+    "Tomato___Septoria_leaf_spot",
+    "Tomato___Tomato_Yellow_Leaf_Curl_Virus",
+    "Tomato___Tomato_mosaic_virus",
+    "Tomato___healthy"
+  ],
+  "code_commit": "314df66acc528570d784f4e15050a4f059cdb93a",
+  "config_hash": "5a7d8338412c022647c1654c281b10eb1837364fed7ca8f18b84a3b7844454bc",
+  "dataset_freeze_sha256": "e61410b4ad6c007c6e2706b1ee16b4c52809a4bd89428dab66506b76113f756c",
+  "environment": {
+    "gpu": "Tesla T4 (15360 MiB)",
+    "lr": {
+      "cnn": 0.0005,
+      "resnet18": 0.001
+    },
+    "platform": "Google Colab",
+    "python": "3.13.15",
+    "split_seed": 42,
+    "torch": "2.11.0+cu130",
+    "torchvision": "0.26.0+cu130",
+    "training": "colab_train.py final, max_epochs 15, patience 4, batch 64, AdamW wd 1e-4, fp16 autocast",
+    "training_seeds": [
+      1,
+      2,
+      3
+    ]
+  },
+  "eval_class_lists": {
+    "external": [
+      "Apple___Apple_scab",
+      "Apple___healthy",
+      "Blueberry___healthy",
+      "Cherry_(including_sour)___healthy",
+      "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot",
+      "Grape___Black_rot",
+      "Grape___healthy",
+      "Peach___healthy",
+      "Pepper,_bell___healthy",
+      "Potato___Early_blight",
+      "Potato___Late_blight",
+      "Raspberry___healthy",
+      "Soybean___healthy",
+      "Squash___Powdery_mildew",
+      "Strawberry___healthy",
+      "Tomato___Bacterial_spot",
+      "Tomato___Early_blight",
+      "Tomato___Late_blight",
+      "Tomato___Leaf_Mold",
+      "Tomato___Septoria_leaf_spot",
+      "Tomato___Tomato_Yellow_Leaf_Curl_Virus",
+      "Tomato___Tomato_mosaic_virus",
+      "Tomato___healthy"
+    ],
+    "source_test": [
+      "Apple___Apple_scab",
+      "Apple___healthy",
+      "Blueberry___healthy",
+      "Cherry_(including_sour)___healthy",
+      "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot",
+      "Grape___Black_rot",
+      "Grape___healthy",
+      "Peach___healthy",
+      "Pepper,_bell___healthy",
+      "Potato___Early_blight",
+      "Potato___Late_blight",
+      "Raspberry___healthy",
+      "Soybean___healthy",
+      "Squash___Powdery_mildew",
+      "Strawberry___healthy",
+      "Tomato___Bacterial_spot",
+      "Tomato___Early_blight",
+      "Tomato___Late_blight",
+      "Tomato___Leaf_Mold",
+      "Tomato___Septoria_leaf_spot",
+      "Tomato___Tomato_Yellow_Leaf_Curl_Virus",
+      "Tomato___Tomato_mosaic_virus",
+      "Tomato___healthy"
+    ]
+  },
+  "manifest_hashes": {
+    "external": "afa84f160393ef3941fb344da20865c18015e9f39a83481b662d0693d9d93ef9",
+    "source": "5174f349a47498fa5b1e094b41c707c92d8e5f1e497fb7eeafe7e8cb5c21bc9a"
+  },
+  "run_id": "final_cnn_s1",
+  "schema_version": 1,
+  "seed": 1,
+  "tau": {
+    "r_cov": 0.996332229005467,
+    "r_risk": 0.3994748743052492
+  }
+}
