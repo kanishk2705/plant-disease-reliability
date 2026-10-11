@@ -1,0 +1,38 @@
+{
+  "status": "PROPOSED, NOT FROZEN. Pending the user's pathology sign-off (protocol 4.1 rule 4). Evidence text is general plant-pathology knowledge written by Claude and has NOT been checked against cited sources; every row needs source verification before the dataset freeze.",
+  "tiers": {
+    "A": "Same crop and the same disease or healthy state, with a specific PlantDoc label. Proposed for the primary class set.",
+    "B": "Plausible match but the PlantDoc label is broader than the PlantVillage class (doubt rule 4.1.3 says exclude). Excluded from the primary set; candidate for a labelled sensitivity analysis.",
+    "C": "No PlantVillage counterpart, or too few images. Excluded."
+  },
+  "rows": [
+    {"plantdoc": "Apple Scab Leaf", "plantvillage": "Apple___Apple_scab", "tier": "A", "evidence": "Apple scab, Venturia inaequalis."},
+    {"plantdoc": "Apple leaf", "plantvillage": "Apple___healthy", "tier": "A", "evidence": "Healthy apple leaf. Many PlantDoc images are isolated stock-photo leaves; 'healthy' means no disease label, not an expert check."},
+    {"plantdoc": "Apple rust leaf", "plantvillage": "Apple___Cedar_apple_rust", "tier": "B", "evidence": "Cedar apple rust is Gymnosporangium juniperi-virginianae; 'apple rust' can also cover other Gymnosporangium rusts."},
+    {"plantdoc": "Bell_pepper leaf spot", "plantvillage": "Pepper,_bell___Bacterial_spot", "tier": "B", "evidence": "Bacterial spot is Xanthomonas; 'leaf spot' is a generic symptom name with other causes."},
+    {"plantdoc": "Bell_pepper leaf", "plantvillage": "Pepper,_bell___healthy", "tier": "A", "evidence": "Healthy bell pepper leaf."},
+    {"plantdoc": "Blueberry leaf", "plantvillage": "Blueberry___healthy", "tier": "A", "evidence": "Healthy blueberry leaf."},
+    {"plantdoc": "Cherry leaf", "plantvillage": "Cherry_(including_sour)___healthy", "tier": "A", "evidence": "Healthy cherry leaf."},
+    {"plantdoc": "Corn Gray leaf spot", "plantvillage": "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot", "tier": "A", "evidence": "Gray leaf spot, Cercospora zeae-maydis (and C. zeina)."},
+    {"plantdoc": "Corn leaf blight", "plantvillage": "Corn_(maize)___Northern_Leaf_Blight", "tier": "B", "evidence": "Northern leaf blight is Exserohilum turcicum; 'corn leaf blight' also covers southern corn leaf blight (Bipolaris maydis)."},
+    {"plantdoc": "Corn rust leaf", "plantvillage": "Corn_(maize)___Common_rust_", "tier": "B", "evidence": "Common rust is Puccinia sorghi; 'corn rust' also covers southern rust (Puccinia polysora)."},
+    {"plantdoc": "Peach leaf", "plantvillage": "Peach___healthy", "tier": "A", "evidence": "Healthy peach leaf."},
+    {"plantdoc": "Potato leaf early blight", "plantvillage": "Potato___Early_blight", "tier": "A", "evidence": "Early blight, Alternaria solani."},
+    {"plantdoc": "Potato leaf late blight", "plantvillage": "Potato___Late_blight", "tier": "A", "evidence": "Late blight, Phytophthora infestans."},
+    {"plantdoc": "Raspberry leaf", "plantvillage": "Raspberry___healthy", "tier": "A", "evidence": "Healthy raspberry leaf."},
+    {"plantdoc": "Soyabean leaf", "plantvillage": "Soybean___healthy", "tier": "A", "evidence": "Healthy soybean leaf."},
+    {"plantdoc": "Squash Powdery mildew leaf", "plantvillage": "Squash___Powdery_mildew", "tier": "A", "evidence": "Powdery mildew of cucurbits (Podosphaera xanthii and related)."},
+    {"plantdoc": "Strawberry leaf", "plantvillage": "Strawberry___healthy", "tier": "A", "evidence": "Healthy strawberry leaf."},
+    {"plantdoc": "Tomato Early blight leaf", "plantvillage": "Tomato___Early_blight", "tier": "A", "evidence": "Early blight, Alternaria solani (A. linariae)."},
+    {"plantdoc": "Tomato Septoria leaf spot", "plantvillage": "Tomato___Septoria_leaf_spot", "tier": "A", "evidence": "Septoria leaf spot, Septoria lycopersici."},
+    {"plantdoc": "Tomato leaf bacterial spot", "plantvillage": "Tomato___Bacterial_spot", "tier": "A", "evidence": "Bacterial spot, Xanthomonas spp."},
+    {"plantdoc": "Tomato leaf late blight", "plantvillage": "Tomato___Late_blight", "tier": "A", "evidence": "Late blight, Phytophthora infestans."},
+    {"plantdoc": "Tomato leaf mosaic virus", "plantvillage": "Tomato___Tomato_mosaic_virus", "tier": "A", "evidence": "Tomato mosaic virus; the PlantDoc name does not say which mosaic-causing virus, so visual labels may be mixed."},
+    {"plantdoc": "Tomato leaf yellow virus", "plantvillage": "Tomato___Tomato_Yellow_Leaf_Curl_Virus", "tier": "A", "evidence": "Tomato yellow leaf curl virus (begomovirus)."},
+    {"plantdoc": "Tomato leaf", "plantvillage": "Tomato___healthy", "tier": "A", "evidence": "Healthy tomato leaf."},
+    {"plantdoc": "Tomato mold leaf", "plantvillage": "Tomato___Leaf_Mold", "tier": "A", "evidence": "Leaf mold, Passalora fulva (Cladosporium fulvum)."},
+    {"plantdoc": "Tomato two spotted spider mites leaf", "plantvillage": "Tomato___Spider_mites Two-spotted_spider_mite", "tier": "A", "evidence": "Two-spotted spider mite damage. Only 2 images exist, so it fails the minimum-count rule."},
+    {"plantdoc": "grape leaf black rot", "plantvillage": "Grape___Black_rot", "tier": "A", "evidence": "Black rot, Guignardia bidwellii."},
+    {"plantdoc": "grape leaf", "plantvillage": "Grape___healthy", "tier": "A", "evidence": "Healthy grape leaf."}
+  ]
+}

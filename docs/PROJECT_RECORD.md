@@ -9,7 +9,8 @@ Last updated 2026-10-11 (end of Phase 2 work). Everything not listed as "execute
 | 0 Environment | Closed. Colab verified once: Python 3.13.15, PyTorch 2.11.0+cu130, CUDA available, one Tesla T4. Colab is the primary GPU environment; laptop for development, Git, docs, light tests; Drive for persistent artefacts; GitHub for code; AWS deferred; target date unspecified. |
 | 1 Literature and protocol | Approved after amendments. Protocol v1.0 approved for implementation; AUDIT items unresolved. OPEN-8 declined. REL26 full article and TINY26 verified (TINY26 identifier/date inconsistency recorded). |
 | 2 Repository and environment | Utilities, tests and documentation written and executed in the sandbox. Colab notebook written, **not executed**. Awaiting user review. |
-| 3 to 12 | Not started. |
+| 3 Dataset audit | Executed in the sandbox from GitHub clones (PlantVillage 54,305 images, PlantDoc cropped 2,578, PlantDoc detection 2,603). Provisional decisions proposed; **nothing frozen**. See `docs/dataset_provenance.md` and `docs/audit/phase3_audit_report.md`. Pending: PlantVillage licence, pathology sign-off with source verification. |
+| 4 to 12 | Not started. |
 
 ## Repository evidence
 
@@ -38,4 +39,4 @@ A2.1 dataset freeze at end of Phase 4; A2.2 two independent Git protections in t
 
 ## Next action
 
-Phase 3: dataset acquisition and audit, producing provisional decisions only. The final dataset freeze is at the end of Phase 4.
+Phase 4: preprocessing, leaf-group-aware splits, manifests, leakage checks and the dataset freeze. Training needs a GPU, which the sandbox does not have (2 CPUs, no GPU, no access to Colab).
