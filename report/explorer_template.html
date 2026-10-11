@@ -1,0 +1,71 @@
+<title>Plant Reliability Explorer</title>
+<style>
+:root{--bg:#f6f5ef;--fg:#1d2a22;--mut:#5f6b62;--card:#fffefa;--line:#dcdacc;--acc:#2f6b3f;--bad:#b4472f;--ok:#2f6b3f}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121a15;--fg:#e8ede6;--mut:#9aa89d;--card:#1a251e;--line:#2e3d33;--acc:#7fc48f;--bad:#e8856c;--ok:#7fc48f;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121a15;--fg:#e8ede6;--mut:#9aa89d;--card:#1a251e;--line:#2e3d33;--acc:#7fc48f;--bad:#e8856c;--ok:#7fc48f;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font:16px/1.55 Georgia,'Times New Roman',serif;padding-inline:16px;padding-block:24px}
+main{max-width:860px;margin:0 auto;display:grid;gap:22px}
+h1{font-size:1.9rem;line-height:1.2;margin:0;text-wrap:balance}h2{font-size:1.15rem;margin:0 0 8px}
+p{margin:0}.mut{color:var(--mut);font-size:.92rem}
+.sans,button,select,label,table{font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;min-width:0}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.kpi b{display:block;font-size:1.8rem;font-variant-numeric:tabular-nums}.kpi span{font-size:.8rem;color:var(--mut);text-transform:uppercase;letter-spacing:.06em}
+.bad{color:var(--bad)}.ok{color:var(--ok)}
+.ctl{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+select,input[type=range]{font-size:1rem}input[type=range]{flex:1;min-width:160px;accent-color:var(--acc)}
+svg{width:100%;height:auto;display:block}svg text{fill:var(--mut);font:11px system-ui,sans-serif}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:.88rem;font-variant-numeric:tabular-nums}
+th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}th:first-child,td:first-child{text-align:left}
+</style>
+<main>
+<header><p class="mut sans" style="text-transform:uppercase;letter-spacing:.08em">Project 2 · PlantVillage → PlantDoc</p>
+<h1>Plant Disease Classifier Reliability Explorer</h1>
+<p class="mut" style="margin-top:8px">Models trained on PlantVillage score about 99% there, then about 15% on field-style PlantDoc photos (23 classes, chance 4.3%). Pick a model and seed; every number comes from <code>results/results.json</code>. No live model runs on this page.</p></header>
+<section class="card ctl sans"><label>Model <select id="m"><option value="cnn">Scratch CNN</option><option value="resnet18">ResNet-18</option></select></label>
+<label>Seed <select id="s"><option>1</option><option>2</option><option>3</option></select></label></section>
+<section class="kpis sans" id="kpis"></section>
+<section class="card"><h2>Abstention: what happens if the model may say “I don't know”?</h2>
+<p class="mut">Drag to keep only the most confident share of PlantDoc images (curve exact for seed 1 only). Risk = error rate on kept images.</p>
+<div class="ctl sans" style="margin:10px 0"><label for="cv">Coverage</label><input id="cv" type="range" min="2" max="100" value="100"><b id="cvo"></b></div>
+<div id="rcout" class="sans" style="margin-bottom:8px"></div><svg id="rc" viewBox="0 0 400 220" role="img" aria-label="Risk-coverage curve"></svg></section>
+<section class="card"><h2>Reliability diagram (seed 1, PlantDoc)</h2>
+<p class="mut">If confidence were honest, bars would follow the diagonal. They sit far below it.</p><svg id="rel" viewBox="0 0 400 260" role="img" aria-label="Reliability diagram"></svg></section>
+<section class="card"><h2>All seeds</h2><div class="tw"><table id="tb"></table></div></section>
+<section class="card"><h2>Read this before quoting anything</h2>
+<p class="mut">One dataset pair and one split seed. The PlantVillage→PlantDoc class mapping is provisional (no pathologist sign-off) and PlantDoc labels are noisy, so some of the error is label and domain noise. The PlantVillage licence is unconfirmed. Temperature scaling fitted on source data did not fix external calibration. Not for agricultural decisions.
+<a href="https://github.com/kanishk2705/plant-disease-reliability" style="color:var(--acc)">Source, protocol and freezes on GitHub</a>.</p></section>
+</main>
+<script>
+const D=/*DATA*/null;const $=i=>document.getElementById(i);const f=(x,d=3)=>x==null?'–':x.toFixed(d);
+const NS='http://www.w3.org/2000/svg';
+function el(p,t,a,txt){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(txt)e.textContent=txt;p.appendChild(e);return e}
+function cur(){return D[$('m').value][$('s').value]}
+function kpis(){const d=cur();$('kpis').innerHTML=
+ `<div class="card kpi"><span>PlantVillage accuracy</span><b class="ok">${f(d.src.accuracy)}</b></div>
+ <div class="card kpi"><span>PlantDoc accuracy</span><b class="bad">${f(d.ext.accuracy)}</b><span>95% CI ${f(d.ci.lo)}–${f(d.ci.hi)}</span></div>
+ <div class="card kpi"><span>PlantDoc ECE</span><b class="bad">${f(d.ext.ece15_width)}</b><span>source ${f(d.src.ece15_width,4)} · T=${f(d.T,2)}</span></div>
+ <div class="card kpi"><span>Error-detection AUROC</span><b>${f(d.ext.auroc_error,2)}</b><span>source ${f(d.src.auroc_error,2)}</span></div>`}
+function rc(){const d=cur(),svg=$('rc');svg.innerHTML='';const W=400,H=220,l=36,b=26,pw=W-l-8,ph=H-b-8;
+ const X=c=>l+c*pw,Y=r=>8+(1-r)*ph;
+ [0,.25,.5,.75,1].forEach(t=>{el(svg,'line',{x1:l,x2:W-8,y1:Y(t),y2:Y(t),stroke:'var(--line)'});el(svg,'text',{x:l-4,y:Y(t)+4,'text-anchor':'end'},t);el(svg,'text',{x:X(t),y:H-8,'text-anchor':'middle'},t)});
+ el(svg,'text',{x:W/2,y:H,'text-anchor':'middle'},'coverage');
+ if(!d.rc){$('rcout').textContent='Full curve stored for seed 1 only; operating points for all seeds are in the table below.';return}
+ const pts=d.rc.coverage.map((c,i)=>[c,d.rc.risk[i]]);
+ el(svg,'path',{d:'M'+pts.map(p=>X(p[0])+','+Y(p[1])).join('L'),fill:'none',stroke:'var(--acc)','stroke-width':2});
+ const c=$('cv').value/100;let best=pts[0];for(const p of pts)if(Math.abs(p[0]-c)<Math.abs(best[0]-c))best=p;
+ el(svg,'circle',{cx:X(best[0]),cy:Y(best[1]),r:5,fill:'var(--bad)'});
+ $('cvo').textContent=Math.round(c*100)+'%';
+ $('rcout').innerHTML=`Keeping <b>${Math.round(best[0]*100)}%</b> of images → <b class="${best[1]>.5?'bad':'ok'}">${Math.round(best[1]*100)}%</b> of kept answers are wrong.`}
+function rel(){const d=D[$('m').value]['1'],svg=$('rel');svg.innerHTML='';const W=400,H=260,l=36,b=28,pw=W-l-8,ph=H-b-8;
+ const X=c=>l+c*pw,Y=r=>8+(1-r)*ph;
+ [0,.5,1].forEach(t=>{el(svg,'line',{x1:l,x2:W-8,y1:Y(t),y2:Y(t),stroke:'var(--line)'});el(svg,'text',{x:l-4,y:Y(t)+4,'text-anchor':'end'},t);el(svg,'text',{x:X(t),y:H-12,'text-anchor':'middle'},t)});
+ el(svg,'line',{x1:X(0),y1:Y(0),x2:X(1),y2:Y(1),stroke:'var(--mut)','stroke-dasharray':'4 3'});
+ d.rel.forEach((q,i)=>{if(!q.count)return;const x=X(i/15),w=pw/15-2;el(svg,'rect',{x:x+1,y:Y(q.accuracy),width:w,height:Math.max(0,Y(0)-Y(q.accuracy)),fill:'var(--bad)',opacity:.85})});
+ el(svg,'text',{x:W/2,y:H-1,'text-anchor':'middle'},'confidence  (bars = actual accuracy in that bin)')}
+function tb(){const m=$('m').value;let h='<tr><th>Seed</th><th>Source acc</th><th>PlantDoc acc</th><th>PlantDoc F1</th><th>ECE</th><th>T</th><th>Cov @90%-val rule</th><th>Risk</th></tr>';
+ for(const s of ['1','2','3']){const d=D[m][s];h+=`<tr><td>${s}</td><td>${f(d.src.accuracy)}</td><td>${f(d.ext.accuracy)}</td><td>${f(d.ext.macro_f1)}</td><td>${f(d.ext.ece15_width)}</td><td>${f(d.T,2)}</td><td>${f(d.sel.r_cov.coverage,2)}</td><td>${f(d.sel.r_cov.risk,2)}</td></tr>`}
+ $('tb').innerHTML=h}
+function all(){kpis();rc();rel();tb()}
+['m','s','cv'].forEach(i=>$(i).addEventListener('input',all));all();
+</script>
