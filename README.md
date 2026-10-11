@@ -1,107 +1,83 @@
 # Plant Disease Classifier Reliability Study
 
-An independent, replication-style comparison of a from-scratch CNN and a fine-tuned ResNet-18,
-trained on PlantVillage and evaluated on PlantDoc, with attention to calibration and
-confidence-based abstention.
+**Do plant-disease classifiers that score ~99% on PlantVillage stay reliable on field-style photos, and can their confidence be trusted to say "I don't know"?**
 
-## What this is, and is not
+A pre-registered, leakage-audited comparison of a from-scratch CNN and a fine-tuned ResNet-18, trained on PlantVillage and tested once on PlantDoc, with source-only temperature scaling and confidence-based abstention. Three training seeds per model, cluster-bootstrap intervals, and every decision frozen in git before the external data was touched.
 
-- **Not a claim of novelty.** Cross-dataset plant-disease classification, calibration and selective
-  prediction have been studied together in recent work (see `docs/research/literature_review.md`,
-  section 6). This project is a transparent, reproducible replication-style comparison.
-- **Not an agricultural diagnosis service.** Nothing here should be used to decide treatment, spraying
-  or any field action.
-- **Licensing and class alignment are unresolved.** The PlantVillage licence conflict, the dataset
-  distributions, the PlantVillage-to-PlantDoc class mapping, the crop policy, the minimum counts and the
-  deduplication settings are Phase 3 audit items. Nothing is assumed about them.
-- **Status at the start of Phase 2:** no dataset has been audited, no model has been trained, and no
-  result has been measured. Numbers in the research documents come from *other* studies and are not
-  results of this project.
+![Distribution-shift gap](docs/figures/fig1_gap.png)
 
-## Research questions (protocol section 1)
+## Headline findings (all numbers are from this repository's runs)
 
-1. Generalisation: how large is the accuracy and macro-F1 gap between a PlantVillage test split and PlantDoc?
-2. Model comparison: does ResNet-18 beat the scratch CNN on PlantDoc, paired?
-3. Confidence reliability: how do ECE and Brier change from source to external data after
-   source-validation-only temperature scaling?
-4. Abstention: does a threshold chosen on source validation data still control risk on PlantDoc?
-5. Error patterns (exploratory): per-class recall, confusions, high-confidence errors.
-
-## Planned workflow
-
-| Phase | Content | State |
+| | PlantVillage test | PlantDoc (external) |
 |---|---|---|
-| 0 | Environment decision (Colab GPU, laptop for development) | closed |
-| 1 | Literature review and protocol | protocol v1.0 approved for implementation |
-| 2 | Repository, utilities, tests (this repository) | utilities and tests exist; see "Current status" |
-| 3 | Dataset acquisition and audit (provisional decisions) | not started |
-| 4 | Preprocessing, splits, manifests, leakage checks, **dataset freeze** | not started |
-| 5+ | Development run, training, calibration, run freeze, external evaluation, error analysis, demo | not started |
+| Scratch CNN accuracy / macro-F1 | 0.987 / 0.982 | **0.143–0.154 / 0.107–0.118** |
+| ResNet-18 accuracy / macro-F1 | 0.994–0.996 / 0.992–0.995 | **0.149–0.167 / 0.111–0.134** |
 
-No training may begin before the dataset freeze passes verification (protocol 4.8, amendment A2.1).
+Ranges are the three training seeds, shown individually in [`docs/RESULTS_TABLES.md`](docs/RESULTS_TABLES.md). 23 classes, so chance is 4.3%.
 
-## Evaluation methodology (protocol sections 4 to 9)
+1. **Large collapse under distribution shift.** Accuracy falls by about 83 percentage points for both models (95% intervals in every seed roughly 81–86 pp). In-distribution accuracy says almost nothing about field-style images.
+2. **ResNet-18 vs scratch CNN: not demonstrated.** ResNet-18's point estimate is higher in all three seeds (macro-F1 +0.004 to +0.019), but the paired 95% interval excludes zero in only one seed, so under the pre-set rule (interval excludes zero *and* every seed agrees) the hypothesis is **not supported**. ImageNet pre-training did not buy robustness here.
+3. **Confidence is badly overconfident on PlantDoc.** Mean confidence exceeds accuracy by 0.65–0.74 (external ECE ≈ 0.65–0.74 versus ≈ 0.003–0.005 on the source test). **Temperature scaling fitted on source validation data did not help**: it slightly *raised* external ECE (e.g. CNN 0.58–0.61 → 0.65–0.70), because the fitted temperature was below 1 (0.48–0.85), sharpening the output further. The calibration error here is a distribution-shift problem, not a temperature problem.
+4. **Abstention helps a little, and the thresholds do not transfer.** Confidence separates right from wrong answers better than chance on PlantDoc (AUROC 0.59–0.63) but far worse than in-distribution (0.97–0.99). The "90% coverage on validation" rule accepts only 8–19% of PlantDoc images (because source confidence saturates near 1.0), and the "≤1% risk" rule accepts 89–99% of images at an 82–86% error rate. Risk–coverage curves stay close to the accept-everything line.
+5. **Per-class and error patterns** are exploratory; see `docs/figures/fig4_per_class_f1.png`.
 
-- **Source split:** by PlantVillage `leaf_id`; train 70%, `val_sel` 7.5%, `val_cal` 7.5%, test 15%; split seed 42; training seeds 1, 2, 3 are the target.
-- **Selection:** checkpoint with the lowest `val_sel` NLL. `val_cal` is used only for temperature scaling and the abstention threshold, and its metrics are labelled development diagnostics.
-- **Calibration:** one scalar temperature fitted by NLL on `val_cal` only. No PlantDoc labels are used for calibration.
-- **Metrics:** accuracy, macro-F1 over a frozen class list (zero-division = 0), per-class metrics, confusion matrices, ECE (15 equal-width and 15 equal-mass bins), multiclass Brier (sum over classes, range [0, 2]), NLL, coverage, selective risk, risk-coverage curve, AURC, AUROC for error detection (positive = incorrect, score = 1 - max probability).
-- **Uncertainty:** cluster bootstrap by `leaf_id` (source) and source-image or duplicate-group component (external); paired bootstrap for model differences; seed variability reported separately.
-- **Isolation:** external labels may be inspected in the pre-model audit under fixed rules; no model output on external data may influence any decision. External evaluation runs only after the run freeze verifies.
+![Reliability diagrams](docs/figures/fig2_reliability.png)
+![Risk-coverage on PlantDoc](docs/figures/fig3_risk_coverage.png)
 
-## Repository layout
+## What was actually done
 
-```
-src/plantrel/       hashing, repro, checkpoint, metrics, bootstrap, freeze, staging, entrypoints
-scripts/            command-line entry points (train.py and eval_external.py are guards only)
-tools/              verify_freeze.py
-configs/            placeholder.yaml; frozen/ holds freeze files (none yet)
-tests/              pytest suite using synthetic data and temporary Git repositories only
-notebooks/          00_colab_bootstrap.ipynb (thin Colab entry point)
-docs/research/      literature_review.md, experimental_protocol.md, references.md
-data/, outputs/     local artefacts, excluded from Git
-```
+| Stage | What | Where |
+|---|---|---|
+| Protocol | Research questions, hypotheses, metrics, rules fixed before data was used (v1.0, amendments logged) | `docs/research/experimental_protocol.md` |
+| Data audit | 54,305 PlantVillage + 2,578 PlantDoc images: duplicates, label conflicts, near-duplicates (DCT pHash), cross-dataset overlap (none exact) | `docs/audit/phase3_audit_report.md` |
+| Splits | Leaf-group-aware 70 / 7.5 / 7.5 / 15 split (train / val_sel / val_cal / test), seed 42, zero group or hash overlap across splits and with the external set | `data_manifests/`, `docs/audit/phase4_report.json` |
+| Dataset freeze | Class list, mapping, thresholds, manifests, transform, hashed and committed before training | `configs/frozen/dataset_decisions_v1.json` |
+| Training | 23 classes; AdamW; fp16; checkpoint chosen by lowest val_sel NLL; learning rate chosen on val_sel only (3 values per model); seeds 1, 2, 3 | `scripts/colab_train.py` |
+| Calibration | One temperature per run fitted on val_cal only; R-cov (90%) and R-risk (1%) thresholds from val_cal | `scripts/calibrate_runs.py` |
+| Run freeze | Temperature, thresholds, checkpoint SHA-256 and code commit committed per run **before any PlantDoc inference**; the evaluator refuses to run if verification fails | `configs/frozen/final_*.json`, `src/plantrel/freeze.py` |
+| External evaluation | One pass on PlantDoc, 10,000-resample cluster bootstrap (clusters = leaf group / duplicate group), gap and paired intervals | `scripts/final_eval.py`, `results/results.json` |
 
-## Setup
+The dataset files are verified against SHA-256 manifests (35,410 files) on every fresh runtime. The test-suite (229 tests) covers metrics, bootstrap, checkpointing/resume, the freeze verifier and the training loop.
 
-Laptop or any machine (CPU is enough for the current code and tests):
+## Method notes that matter for interpretation
 
-```bash
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements-dev.txt
-pip install torch torchvision        # only if torch is not already installed
-pip install -e . --no-deps
-python -m pytest
-```
+- **Source:** PlantVillage colour images, grouped by leaf (`leaf_id`) so the same leaf never appears in two splits; images without a leaf mapping get fallback groups; same-class near-duplicates (pHash ≤ 2) are merged.
+- **External:** PlantDoc "cropped" release (whole images), de-duplicated (conflicting-label clusters removed), mapped to PlantVillage classes. Primary set: **23 classes, 1,993 images**; every class has at least 53.
+- **Evaluation transform:** whole image resized to 224×224, no crop, identical for both models and datasets.
+- **Metrics:** macro-F1 over a frozen class list; ECE with 15 equal-width bins (primary; equal-mass ECE is also stored in `results/results.json`); multiclass Brier as sum over classes (range 0–2); NLL; selective risk and coverage with counts; AURC; AUROC for error detection. Three seeds are reported individually, never averaged into an ensemble.
 
-Colab: open `notebooks/00_colab_bootstrap.ipynb`, edit the placeholders in its first cell, and run it.
-It installs the package with `--no-deps` so Colab's pre-installed PyTorch is not replaced. A Colab session
-verified in Phase 0 had Python 3.13.15, PyTorch 2.11.0+cu130 and one Tesla T4, but every session must
-record its own hardware and versions (`scripts/log_environment.py`); a later session may differ.
-Do not run a Streamlit demo on a free Colab runtime; the demo is planned for AWS later.
+## Limitations (please read)
 
-Dependencies are specified as lower bounds in `requirements.txt`. The versions the tests were actually
-run against are in `docs/ENVIRONMENT.md`.
+- **One dataset pair, one split seed.** Nothing here shows the pattern holds for other crops, datasets or architectures.
+- **Class mapping is provisional.** The PlantVillage→PlantDoc mapping was proposed from general pathology knowledge and was not validated by a plant pathologist. Some PlantDoc classes ("Apple leaf", "Peach leaf") contain fruit and stock photos, and web-scraped labels are noisy; part of the 85% error is label and domain noise, not model failure alone.
+- **Hyperparameter grids are small and sit at an edge** (CNN best at the smallest learning rate tried, ResNet-18 at the largest). Better tuning could shift absolute numbers, but not plausibly close an 83-point gap. Both models were tuned with the same budget on source validation data only.
+- **Temperature below 1** (sharpening) was fitted on clean validation images while training used augmentation; the cause is a hypothesis, not tested here.
+- **Licence:** PlantDoc is CC BY 4.0. The PlantVillage licence could not be confirmed from primary sources (repository, mirror and portal disagree or were unreachable); datasets are not redistributed here, only hashes and file lists.
+- **Not comparable to other papers as-is:** a related 2026 study (Xiang et al., *Frontiers in Plant Science*) reports a different class set, model and evaluation transform; this repository does not claim to reproduce or beat its numbers.
+- **Not an agricultural advice tool.** Do not use it to decide treatment.
+- **Code fix after freeze (transparent):** the first external run crashed on a JSON-serialisation bug before any metric was seen; a fix was committed and the run freezes re-issued with identical temperatures, thresholds and checkpoint hashes (amendment A3.1 in `docs/PROJECT_RECORD.md`).
+- **No live inference demo is deployed.** The results explorer in `docs/index.html` is static; a hosted model demo is future work.
 
-## Freeze verification
+## Reproduce
 
 ```bash
-python tools/verify_freeze.py dataset --freeze configs/frozen/dataset_decisions_v1.json --sha256 <hash from the run log> --repo-root .
-python tools/verify_freeze.py run --freeze configs/frozen/<run_id>.json --sha256 <hash> --repo-root . \
-    --checkpoint <ckpt> --source-manifest <m> --external-manifest <m> --dataset-freeze configs/frozen/dataset_decisions_v1.json
+git clone https://github.com/kanishk2705/plant-disease-reliability && cd plant-disease-reliability
+pip install -e ".[torch]"            # or use requirements-colab.txt on Colab
+python scripts/colab_prepare.py --work work        # clones datasets at pinned revisions, verifies every file hash, builds caches
+python scripts/colab_train.py dev   --work work --max-epochs 15 --patience 4
+python scripts/colab_train.py final --work work --max-epochs 15 --patience 4 --lr cnn=0.0005 resnet18=0.001
+python scripts/calibrate_runs.py --work work
+# issue run freezes (scripts/make_run_freeze.py), commit them, then:
+python scripts/final_eval.py --run-id final_cnn_s1 --work work --repo-root .
+python report/make_tables.py && python report/make_figures.py
 ```
 
-Exit status 0 means every check passed; anything else means do not proceed. The verifier compares the
-file hash with its sidecar and with an independently supplied hash, runs
-`git diff --exit-code <code_commit> HEAD` over the code paths, and separately checks the staged, unstaged
-and untracked state. A clean working tree alone is never treated as proof that the code is unchanged.
+Training used a Colab T4 (Python 3.13, PyTorch 2.11, torchvision 0.26) at about 17 minutes per run. GPU results are not bit-exact across hardware.
 
-## Current status (end of Phase 2 work in this repository)
+## Repository map
 
-See "Test evidence" in `docs/ENVIRONMENT.md`. Utilities and tests exist; nothing has been run on Colab,
-on a GPU, or on real data. No dataset audit, training, calibration result or freeze for real data exists.
+`src/plantrel` library · `scripts/` pipeline entry points · `configs/frozen/` hashed freezes · `data_manifests/` split manifests · `results/results.json` aggregated results · `docs/figures` plots · `docs/research` protocol and literature review · `docs/audit` data audit · `tests/` 229 tests · `report/` table and figure generation (outside the frozen code paths).
 
-## Licence and citation
+## Citing
 
-Placeholders only: `LICENSE-PLACEHOLDER.md`, `CITATION.cff`. No licence has been chosen. Dataset
-licences are unresolved; datasets and weights are never committed.
+See `CITATION.cff`. Datasets: PlantVillage (Hughes & Salathé, 2015; Mohanty et al., 2016) and PlantDoc (Singh et al., 2020).
