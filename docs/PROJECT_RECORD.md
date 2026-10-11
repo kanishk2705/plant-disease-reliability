@@ -40,3 +40,11 @@ A2.1 dataset freeze at end of Phase 4; A2.2 two independent Git protections in t
 ## Next action
 
 Phase 4: preprocessing, leaf-group-aware splits, manifests, leakage checks and the dataset freeze. Training needs a GPU, which the sandbox does not have (2 CPUs, no GPU, no access to Colab).
+
+## Amendment A3.1 (post-freeze code fix, 2026-10-11)
+The first external-evaluation attempt (`final_cnn_s1`) verified its run freeze and computed external logits, then crashed while writing
+its report JSON because numpy integers/floats were not serialisable. No external metric had been printed or inspected. The bug was a
+serialisation defect only. `report.to_jsonable` and a test were added; no metric, threshold, calibration or model code changed.
+Because the fix touched frozen code paths, the six run freezes were re-issued with the new `code_commit`. T, tau, checkpoint hashes,
+config hashes, class lists and manifest hashes are byte-identical to the first freezes (verified field by field). The earlier
+freeze commit is `0344fa4` and remains in history.
