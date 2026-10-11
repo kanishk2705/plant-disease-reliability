@@ -1,0 +1,33 @@
+# data, outputs, weights: never in Git
+data/*
+!data/.gitkeep
+outputs/*
+!outputs/.gitkeep
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.npz
+*.npy
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+# credentials
+.env
+.env.*
+*.key
+*.pem
+*credentials*.json
+*token*
+.kaggle/
+# python / tooling
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ipynb_checkpoints/
+.venv/
+venv/
