@@ -1,0 +1,66 @@
+{
+ "seed": 42,
+ "K": 23,
+ "classes": [
+  "Apple___Apple_scab",
+  "Apple___healthy",
+  "Blueberry___healthy",
+  "Cherry_(including_sour)___healthy",
+  "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot",
+  "Grape___Black_rot",
+  "Grape___healthy",
+  "Peach___healthy",
+  "Pepper,_bell___healthy",
+  "Potato___Early_blight",
+  "Potato___Late_blight",
+  "Raspberry___healthy",
+  "Soybean___healthy",
+  "Squash___Powdery_mildew",
+  "Strawberry___healthy",
+  "Tomato___Bacterial_spot",
+  "Tomato___Early_blight",
+  "Tomato___Late_blight",
+  "Tomato___Leaf_Mold",
+  "Tomato___Septoria_leaf_spot",
+  "Tomato___Tomato_Yellow_Leaf_Curl_Virus",
+  "Tomato___Tomato_mosaic_virus",
+  "Tomato___healthy"
+ ],
+ "groups_in_multiple_splits": 0,
+ "exact_dup_hash_across_splits": 0,
+ "pv_sha_in_external": 0,
+ "ext_clusters_dup": 0,
+ "counts": {
+  "train": 23327,
+  "val_sel": 2532,
+  "val_cal": 2530,
+  "test": 5028
+ },
+ "fractions": {
+  "train": 0.6981,
+  "val_sel": 0.0758,
+  "val_cal": 0.0757,
+  "test": 0.1505
+ },
+ "classes_missing_from_any_split": [],
+ "per_class_min_per_split": {
+  "train": 249,
+  "val_sel": 27,
+  "val_cal": 28,
+  "test": 55
+ },
+ "groups": {
+  "train": 8904,
+  "val_sel": 951,
+  "val_cal": 952,
+  "test": 1909
+ },
+ "external_n": 1993,
+ "external_min_per_class": 53,
+ "external_classes_covered": 23,
+ "pv_total": 33417,
+ "sha256": {
+  "source_manifest.csv": "5174f349a47498fa5b1e094b41c707c92d8e5f1e497fb7eeafe7e8cb5c21bc9a",
+  "external_manifest.csv": "b64d8e10055ada3c8ecbbbc95d9ae6461602655c9b984fe87a487eb020fcbf99"
+ }
+}
