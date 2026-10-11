@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "plantrel"
+version = "0.1.0.dev0"
+description = "Plant Disease Classifier Reliability Study: utilities for a PlantVillage to PlantDoc replication-style comparison."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.26",
+    "scipy>=1.11",
+    "pyyaml>=6.0",
+    "pillow>=10.0",
+    "pandas>=2.0",
+]
+
+[project.optional-dependencies]
+# torch and torchvision are deliberately NOT core dependencies: on Colab the pre-installed
+# build must be used, not reinstalled. Install them only on machines that lack them.
+torch = ["torch>=2.2", "torchvision>=0.17"]
+dev = ["pytest>=8.0", "scikit-learn>=1.3"]
+plots = ["matplotlib>=3.7"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src", "tests"]
+testpaths = ["tests"]
+addopts = "-ra"
+markers = ["torch: needs PyTorch"]

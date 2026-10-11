@@ -1,0 +1,4 @@
+# For a Colab runtime: only what Colab may lack. Do NOT add torch/torchvision here.
+# Colab usually has numpy, scipy, pandas, pillow and pyyaml already; this file only makes the
+# need explicit. Install the package itself with:  pip install -e . --no-deps
+-r requirements.txt

@@ -1,0 +1,7 @@
+# Core runtime dependencies (lower bounds; versions actually tested are in docs/ENVIRONMENT.md).
+# torch/torchvision are NOT listed: on Colab keep the pre-installed build.
+numpy>=1.26
+scipy>=1.11
+pyyaml>=6.0
+pillow>=10.0
+pandas>=2.0

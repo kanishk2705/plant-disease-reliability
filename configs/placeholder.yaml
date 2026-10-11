@@ -1,0 +1,15 @@
+# PLACEHOLDER. No value here is a result or a tuned setting.
+# Items marked AUDIT are fixed at the dataset freeze (end of Phase 4); DEV items are set in the
+# development run on val_sel only (Phase 5). See docs/research/experimental_protocol.md.
+protocol_version: "1.0"
+split:
+  seed: 42            # FIXED
+  fractions: {train: 0.70, val_sel: 0.075, val_cal: 0.075, test: 0.15}   # FIXED
+training_seeds: [1, 2, 3]   # FIXED target; the number actually completed is reported
+class_list: null            # AUDIT
+eval_class_lists: null      # AUDIT
+crop_policy: null           # AUDIT
+min_counts: null            # AUDIT
+dedup_settings: null        # AUDIT
+evaluation_transform: null  # AUDIT
+hyperparameters: null       # DEV
