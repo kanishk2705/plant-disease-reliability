@@ -17,24 +17,75 @@ select,input[type=range]{font-size:1rem}input[type=range]{flex:1;min-width:160px
 svg{width:100%;height:auto;display:block}svg text{fill:var(--mut);font:11px system-ui,sans-serif}
 .tw{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:.88rem;font-variant-numeric:tabular-nums}
 th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}th:first-child,td:first-child{text-align:left}
+
+h2.step{display:flex;gap:10px;align-items:baseline;font-size:1.3rem;margin:0 0 10px}h2.step i{font:700 .8rem system-ui,sans-serif;color:var(--bg);background:var(--acc);border-radius:99px;padding:2px 9px;font-style:normal}
+section.s{display:grid;gap:12px;min-width:0}ul{margin:0;padding-left:1.2rem;display:grid;gap:4px}
+.fig{border:1px solid var(--line);border-radius:8px;background:#fff;padding:4px}.fig img{display:block;width:100%;height:auto}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+code{font-size:.88em;background:var(--card);border:1px solid var(--line);border-radius:4px;padding:0 4px}
+a{color:var(--acc)}
 </style>
 <main>
-<header><p class="mut sans" style="text-transform:uppercase;letter-spacing:.08em">Project 2 · PlantVillage → PlantDoc</p>
-<h1>Plant Disease Classifier Reliability Explorer</h1>
-<p class="mut" style="margin-top:8px">Models trained on PlantVillage score about 99% there, then about 15% on field-style PlantDoc photos (23 classes, chance 4.3%). Pick a model and seed; every number comes from <code>results/results.json</code>. No live model runs on this page.</p></header>
-<section class="card ctl sans"><label>Model <select id="m"><option value="cnn">Scratch CNN</option><option value="resnet18">ResNet-18</option></select></label>
-<label>Seed <select id="s"><option>1</option><option>2</option><option>3</option></select></label></section>
-<section class="kpis sans" id="kpis"></section>
-<section class="card"><h2>Abstention: what happens if the model may say “I don't know”?</h2>
-<p class="mut">Drag to keep only the most confident share of PlantDoc images (curve exact for seed 1 only). Risk = error rate on kept images.</p>
-<div class="ctl sans" style="margin:10px 0"><label for="cv">Coverage</label><input id="cv" type="range" min="2" max="100" value="100"><b id="cvo"></b></div>
-<div id="rcout" class="sans" style="margin-bottom:8px"></div><svg id="rc" viewBox="0 0 400 220" role="img" aria-label="Risk-coverage curve"></svg></section>
-<section class="card"><h2>Reliability diagram (seed 1, PlantDoc)</h2>
-<p class="mut">If confidence were honest, bars would follow the diagonal. They sit far below it.</p><svg id="rel" viewBox="0 0 400 260" role="img" aria-label="Reliability diagram"></svg></section>
-<section class="card"><h2>All seeds</h2><div class="tw"><table id="tb"></table></div></section>
-<section class="card"><h2>Read this before quoting anything</h2>
-<p class="mut">One dataset pair and one split seed. The PlantVillage→PlantDoc class mapping is provisional (no pathologist sign-off) and PlantDoc labels are noisy, so some of the error is label and domain noise. The PlantVillage licence is unconfirmed. Temperature scaling fitted on source data did not fix external calibration. Not for agricultural decisions.
-<a href="https://github.com/kanishk2705/plant-disease-reliability" style="color:var(--acc)">Source, protocol and freezes on GitHub</a>.</p></section>
+<header><p class="mut sans" style="text-transform:uppercase;letter-spacing:.08em">Project 2 · Machine learning reliability study</p>
+<h1>Plant Disease Classifier Reliability Study</h1>
+<p style="margin-top:8px">Plant-disease classifiers report about 99% accuracy on the PlantVillage benchmark. This project asks what happens when the same models see field-style photos, and whether their confidence can be trusted enough to say “I don't know”.</p>
+<p class="mut sans" style="margin-top:8px"><a href="https://github.com/kanishk2705/plant-disease-reliability">Code and protocol on GitHub</a> · read top to bottom: problem → design → implementation → results → next steps</p></header>
+
+<section class="s card"><h2 class="step"><i>1</i> The problem</h2>
+<p>PlantVillage photos are leaves on plain backgrounds under controlled light. A farmer's phone photo has soil, hands, shadows and other leaves in frame. A model that scores 99% on the first may fail on the second, and a wrong answer given with high confidence is worse than no answer. Two things were measured: how much accuracy is lost, and whether the model's confidence warns us when it is wrong.</p>
+<p class="mut">Questions fixed in advance: how large is the accuracy gap; does ImageNet pre-training (ResNet-18) generalise better than a small CNN trained from scratch; is confidence calibrated on field images, and does temperature scaling fitted on source data fix it; can a confidence threshold chosen on source data safely reject bad predictions.</p></section>
+
+<section class="s card"><h2 class="step"><i>2</i> Design: how the study was made trustworthy</h2>
+<ul>
+<li><b>Pre-registered protocol.</b> Hypotheses, metrics and decision rules were written and committed before any field data was used.</li>
+<li><b>Leakage-proof splits.</b> PlantVillage has many photos of the same leaf. Splits are grouped by leaf (70 / 7.5 / 7.5 / 15 for train, selection, calibration, test), with zero group or hash overlap across splits and with the external set.</li>
+<li><b>External data touched once.</b> PlantDoc (1,993 images, 23 shared classes) was never used for training, tuning, calibration or thresholds. Each run's temperature, thresholds and checkpoint hash were frozen in git before it saw PlantDoc, and the evaluator refuses to run if verification fails.</li>
+<li><b>Two models, three seeds each,</b> reported individually, with 10,000-resample cluster-bootstrap confidence intervals.</li>
+</ul></section>
+
+<section class="s card"><h2 class="step"><i>3</i> Implementation</h2>
+<div class="two"><div><p><b>Models.</b> A 3.4M-parameter CNN trained from scratch, and ImageNet-pretrained ResNet-18 (11.2M) with a 23-class head. AdamW, mixed precision, checkpoint chosen by lowest validation loss, learning rate picked from 3 values per model on selection data only.</p></div>
+<div><p><b>Reliability tooling.</b> One temperature per run fitted on the calibration split; two abstention rules from the same split (keep 90% coverage; cap risk at 1%). Metrics: accuracy, macro-F1, ECE, Brier, NLL, AURC, AUROC for error detection.</p></div></div>
+<p class="mut">PyTorch on a Colab T4, about 17 minutes per run, 229 automated tests, data verified against SHA-256 manifests (35,410 files). Everything reproduces from the README.</p></section>
+
+<section class="s"><h2 class="step"><i>4</i> Results</h2>
+<div class="card"><p><b>Finding 1: accuracy collapses.</b> About 99% on PlantVillage becomes 14–17% on PlantDoc (chance is 4.3%), a gap of roughly 83 percentage points with 95% intervals of about 81–86.</p>
+<div class="fig" style="margin-top:10px"><img src="figures/fig1_gap.png" alt="Accuracy on PlantVillage versus PlantDoc for both models"></div></div>
+<div class="card"><p><b>Finding 2: the pretrained model is not clearly better.</b> ResNet-18 is higher in every seed (macro-F1 +0.004 to +0.019), but the paired interval excludes zero in only one seed, so the pre-set rule says: not demonstrated.</p></div>
+<div class="card"><p><b>Finding 3: confidence is badly overconfident, and temperature scaling did not help.</b> Mean confidence exceeds accuracy by 0.65–0.74 on PlantDoc, against 0.003–0.005 on PlantVillage. Scaling fitted on source data slightly raised external error, because it sharpened outputs (T below 1). The problem is the shift itself, not a temperature setting.</p>
+<div class="fig" style="margin-top:10px"><img src="figures/fig2_reliability.png" alt="Reliability diagrams"></div></div>
+<div class="card"><p><b>Finding 4: thresholds chosen on source data do not transfer.</b> Confidence separates right from wrong far less well on PlantDoc (AUROC 0.59–0.63, against 0.97–0.99 on source). Explore it below.</p></div>
+</section>
+
+<section class="s card"><h2 class="step"><i>5</i> Explore the numbers</h2>
+<div class="ctl sans"><label>Model <select id="m"><option value="cnn">Scratch CNN</option><option value="resnet18">ResNet-18</option></select></label>
+<label>Seed <select id="s"><option>1</option><option>2</option><option>3</option></select></label></div>
+<div class="kpis sans" id="kpis"></div>
+<h2 style="margin-top:8px">Abstention: keep only the most confident images</h2>
+<p class="mut">Drag the slider. Risk is the share of kept answers that are wrong. Full curve stored for seed 1.</p>
+<div class="ctl sans"><label for="cv">Coverage</label><input id="cv" type="range" min="2" max="100" value="100"><b id="cvo"></b></div>
+<div id="rcout" class="sans"></div><svg id="rc" viewBox="0 0 400 220" role="img" aria-label="Risk-coverage curve"></svg>
+<h2 style="margin-top:8px">Reliability diagram (seed 1, PlantDoc)</h2>
+<p class="mut">Honest confidence would put the bars on the dashed diagonal.</p><svg id="rel" viewBox="0 0 400 260" role="img" aria-label="Reliability diagram"></svg>
+<div class="tw"><table id="tb"></table></div></section>
+
+<section class="s card"><h2 class="step"><i>6</i> What this means</h2>
+<p>Benchmark accuracy says almost nothing about field performance, and confidence from a source-trained model cannot be used as a safety signal on new image types without checking it on data from the target setting. Any deployment would need calibration and thresholds set on target-domain data, which this study deliberately did not do.</p></section>
+
+<section class="s card"><h2 class="step"><i>7</i> Limitations</h2>
+<ul><li>One dataset pair and one split seed; nothing shows this holds for other crops or architectures.</li>
+<li>The PlantVillage→PlantDoc class mapping is provisional (no pathologist sign-off), and PlantDoc labels are web-scraped and noisy, so part of the error is label and domain noise.</li>
+<li>Small hyperparameter grids; both models got the same budget on source data only.</li>
+<li>The PlantVillage licence could not be confirmed; datasets and weights are not redistributed.</li>
+<li>A code fix (JSON serialisation) was made after the freeze and before any metric was seen, with identical temperatures, thresholds and checkpoints; it is logged openly in the project record.</li>
+<li>No live model demo is deployed; this page is static.</li></ul></section>
+
+<section class="s card"><h2 class="step"><i>8</i> Next steps</h2>
+<ul><li>Have a plant pathologist validate the class mapping.</li>
+<li>Test target-domain calibration with a small labelled field sample, kept separate from the evaluation set.</li>
+<li>Try domain-robust training (stronger augmentation, background removal) and more architectures and datasets.</li>
+<li>Add a small Streamlit demo and a walkthrough video.</li></ul>
+<p class="mut">Not an agricultural advice tool; do not use it to decide treatment.</p></section>
 </main>
 <script>
 const D=/*DATA*/null;const $=i=>document.getElementById(i);const f=(x,d=3)=>x==null?'–':x.toFixed(d);

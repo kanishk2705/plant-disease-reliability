@@ -1,6 +1,10 @@
-# PLACEHOLDER. Authors, title, version, date and repository URL are not final.
 cff-version: 1.2.0
-message: "Placeholder citation file; replace before any public release."
-title: "Plant Disease Classifier Reliability Study (placeholder)"
+message: "If you use this work, please cite it as below."
+title: "Plant Disease Classifier Reliability Study"
+type: software
 authors:
-  - name: "TO BE FILLED BY THE REPOSITORY OWNER"
+  - given-names: "Kanishk"
+repository-code: "https://github.com/kanishk2705/plant-disease-reliability"
+license: MIT
+date-released: "2026-10-12"
+abstract: "Cross-dataset (PlantVillage to PlantDoc) evaluation of a scratch CNN and ResNet-18: accuracy collapse, calibration and confidence-based abstention."

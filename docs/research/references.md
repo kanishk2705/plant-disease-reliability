@@ -31,7 +31,7 @@ Status codes:
 | [MOHANTY16] | Mohanty, S. P., Hughes, D. P. and Salathé, M. (2016). Using deep learning for image-based plant disease detection. *Frontiers in Plant Science* 7:1419. doi:10.3389/fpls.2016.01419. Preprint arXiv:1604.03169. | Verified (abstract) | Reports 99.35% accuracy on a held-out test set. It also reports 31.4% accuracy on images from trusted online sources taken under different conditions, against 2.6% for random selection. |
 | [PD-PAPER] | Singh, D., Jain, N., Jain, P., Kayal, P., Kumawat, S. and Batra, N. (2020). PlantDoc: A dataset for visual plant disease detection. *Proc. 7th ACM IKDD CoDS and 25th COMAD*, pp. 249–253. doi:10.1145/3371158.3371196. arXiv:1911.10317 (23 Nov 2019). | Verified (abstract + excerpt) | Abstract: 2,598 data points, 13 plant species, "up to 17 classes of diseases", about 300 human hours of annotation of internet-scraped images. An arXiv HTML excerpt gives "27 classes (17-10, disease-healthy)". |
 | [NOYAN22] | Noyan, M. A. (2022). Uncovering bias in the PlantVillage dataset. arXiv:2206.04374. | Verified (abstract) | A random forest on 8 background pixels reached 49.0% test accuracy against 2.6% random. Concludes the dataset contains label-correlated noise that models can exploit. |
-| [BARBEDO18] | Barbedo, J. G. A. (2018). Impact of dataset size and variety on the effectiveness of deep learning and transfer learning for plant disease classification. *Computers and Electronics in Agriculture* 153:46–53. | Secondary | Seen only in another paper's reference list. The content was **not** read. |
+| [BARBEDO18] | Barbedo, J. G. A. (2018). Impact of dataset size and variety on the effectiveness of deep learning and transfer learning for plant disease classification. *Computers and Electronics in Agriculture* 153:46–53. | Secondary | **Could not be verified** (2026-10-12 searches did not find it). Not cited in any claim in this repository; treat as unconfirmed or drop it. |
 | [ARIMA25] | Arima, Y., Kagiwada, S. and Iyatomi, H. (2025). DDD: Discriminative Difficulty Distance for plant disease diagnosis. arXiv:2501.00734. | Verified (abstract) | Raises concern about overestimated diagnostic performance when train and test sets come from the same domain. |
 | [GRAPE26] | A dataset-centric benchmark of deep learning methods for grape leaf disease classification and detection. arXiv:2608.20608. | Verified (excerpt) | Reports exact image overlap among several controlled datasets. Authors and exact date were not retrieved. |
 
@@ -56,8 +56,8 @@ Status codes:
 | [GEIFMAN19] | Geifman, Y. and El-Yaniv, R. (2019). SelectiveNet: A deep neural network with an integrated reject option. *ICML*, PMLR 97. | Verified (abstract) | Integrated reject option. Context only. |
 | [NIXON19] | Nixon, J., Dusenberry, M., Jerfel, G., Nguyen, T., Liu, J., Zhang, L. and Tran, D. (2019). Measuring calibration in deep learning. arXiv:1904.01685. | Verified (abstract) | ECE has numerous flaws. Adaptive (equal-mass) binning gives more stable metric rankings across bin counts. Class-conditional measures and the L2 norm are also discussed. |
 | [ROELOFS] | "Mitigating bias in calibration error estimation." arXiv:2012.08668. | Verified (excerpt only) | Authors were not shown in the excerpt. States that ECE with 15 equal-width bins is the most common choice, that binned ECE grows with the number of bins, and that equal-mass ECE is less biased. |
-| [NAEINI15] | Naeini, M. P., Cooper, G. F. and Hauskrecht, M. (2015). Obtaining well calibrated probabilities using Bayesian binning. | Secondary | Seen as the origin cited for ECE in other papers. The paper itself was not opened. |
-| [BRIER50] | Brier, G. W. (1950). Verification of forecasts expressed in terms of probability. *Monthly Weather Review* 78(1):1–3. | **Not verified. Cited from memory.** | Check before publication. |
+| [NAEINI15] | Naeini, M. P., Cooper, G. F. and Hauskrecht, M. (2015). Obtaining well calibrated probabilities using Bayesian binning. | Secondary | Bibliographic details confirmed 2026-10-12 against the AAAI proceedings page (ojs.aaai.org, AAAI 2015). Full text not read; used only as the cited origin of ECE. |
+| [BRIER50] | Brier, G. W. (1950). Verification of forecasts expressed in terms of probability. *Monthly Weather Review* 78(1):1–3. | Secondary | Title, Monthly Weather Review 78(1):1–3 and DOI 10.1175/1520-0493(1950)078<0001:VOFEIT>2.0.CO;2 confirmed 2026-10-12 via a secondary page. Original not read; used only as the origin of the Brier score. |
 
 ## E. Tooling and compute
 
@@ -65,7 +65,7 @@ Status codes:
 |---|---|---|---|
 | [COLAB-FAQ] | Google Colab Frequently Asked Questions. https://research.google.com/colaboratory/faq.html (fetched 2026-10-11) | Verified (primary) | See the literature review, section 8, for the specific claims used. |
 | [TV-R18] | torchvision documentation, `resnet18` (docs version 0.29). https://docs.pytorch.org/vision/stable/models/generated/torchvision.models.resnet18.html | Verified (primary) | `ResNet18_Weights.IMAGENET1K_V1` (also `DEFAULT`): ImageNet-1K acc@1 69.758, 11,689,512 parameters, inference transform is resize 256, centre crop 224, mean [0.485, 0.456, 0.406], std [0.229, 0.224, 0.225]. |
-| [RESNET] | He, K. et al. Deep residual learning for image recognition. arXiv:1512.03385. | Secondary | Linked from the torchvision page. Not opened. |
+| [RESNET] | He, K. et al. Deep residual learning for image recognition. arXiv:1512.03385. | Secondary | Title, authors and year confirmed 2026-10-12 on arxiv.org/abs/1512.03385. Full text not re-read here; used only as the architecture reference. |
 
 ---
 

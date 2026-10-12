@@ -4,6 +4,8 @@
 
 A pre-registered, leakage-audited comparison of a from-scratch CNN and a fine-tuned ResNet-18, trained on PlantVillage and tested once on PlantDoc, with source-only temperature scaling and confidence-based abstention. Three training seeds per model, cluster-bootstrap intervals, and every decision frozen in git before the external data was touched.
 
+**Read it as a story:** [project page](https://kanishk2705.github.io/plant-disease-reliability/) (problem → design → implementation → results → limitations → next steps, with interactive abstention and calibration plots).
+
 ![Distribution-shift gap](docs/figures/fig1_gap.png)
 
 ## Headline findings (all numbers are from this repository's runs)
@@ -52,11 +54,18 @@ The dataset files are verified against SHA-256 manifests (35,410 files) on every
 - **Class mapping is provisional.** The PlantVillage→PlantDoc mapping was proposed from general pathology knowledge and was not validated by a plant pathologist. Some PlantDoc classes ("Apple leaf", "Peach leaf") contain fruit and stock photos, and web-scraped labels are noisy; part of the 85% error is label and domain noise, not model failure alone.
 - **Hyperparameter grids are small and sit at an edge** (CNN best at the smallest learning rate tried, ResNet-18 at the largest). Better tuning could shift absolute numbers, but not plausibly close an 83-point gap. Both models were tuned with the same budget on source validation data only.
 - **Temperature below 1** (sharpening) was fitted on clean validation images while training used augmentation; the cause is a hypothesis, not tested here.
-- **Licence:** PlantDoc is CC BY 4.0. The PlantVillage licence could not be confirmed from primary sources (repository, mirror and portal disagree or were unreachable); datasets are not redistributed here, only hashes and file lists.
+- **Licence:** code is MIT (see `LICENSE`). PlantDoc is CC BY 4.0. The PlantVillage licence could not be confirmed from primary sources (repository, mirror and portal disagree or were unreachable); datasets are not redistributed here, only hashes and file lists.
 - **Not comparable to other papers as-is:** a related 2026 study (Xiang et al., *Frontiers in Plant Science*) reports a different class set, model and evaluation transform; this repository does not claim to reproduce or beat its numbers.
 - **Not an agricultural advice tool.** Do not use it to decide treatment.
 - **Code fix after freeze (transparent):** the first external run crashed on a JSON-serialisation bug before any metric was seen; a fix was committed and the run freezes re-issued with identical temperatures, thresholds and checkpoint hashes (amendment A3.1 in `docs/PROJECT_RECORD.md`).
 - **No live inference demo is deployed.** The results explorer in `docs/index.html` is static; a hosted model demo is future work.
+
+## Next steps
+
+- Pathologist review of the class mapping.
+- A small labelled field sample, kept separate from the evaluation set, to test target-domain calibration.
+- Domain-robust training and more architectures and datasets.
+- A small Streamlit demo and a walkthrough video.
 
 ## Reproduce
 
